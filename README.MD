@@ -1,7 +1,27 @@
-# pakapp Installation
+## pakapp Installation
 
 ```bash
-    cd admk-utilites
+    git clone https://github.com/xMadCore/admk-utilities.git
+```
+```
+    # dir structure after
+
+    home/user/
+    ├── admk-utilities/
+    │   ├── config.txt
+    │   ├── install-config.sh
+    │   ├── pre-install-tests.sh
+    │   ├── install-pakapp.sh
+    │   ├── post-install-tests.sh
+    │   └── ...
+    ├── config/
+        └── ...
+    ├── pakapp
+    └── Documents/
+        └── wallpaper.png
+```
+```bash
+    cd admk-utilities
 
     chmod +x install-config.sh
     chmod +x pre-install-tests.sh
@@ -13,10 +33,6 @@
     sudo reboot
 
     ./pre-install-tests.sh
-
-    # move wallpaper.png to ~/Documents/wallpaper.png
-    # move dir config -> ~/config
-    # move pakapp -> ~/pakapp
 
     ./install-pakapp.sh
 
