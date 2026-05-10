@@ -1,8 +1,25 @@
 #!/bin/bash
+FILE_PATH_99_HIDRAW_RULES="/etc/udev/rules.d/99-hidraw.rules"
+FILE_PATH_99_MEDICAL_RULES="/etc/udev/rules.d/99-medical.rules"
+FILE_PATH_99_MEDICAL_HID_RULES="/etc/udev/rules.d/99-medical-hid.rules"
+FILE_PATH_10_NETWORK_MANAGER_RULES="/etc/polkit-1/rules.d/10-network-manager.rules"
+
+FILE_PATH_CONFIG_DIR=~/config
+FILE_PATH_PAKAPP=~/pakapp
+FILE_PATH_WALLPAPER=~/Documents/wallpaper.png
+
+FILE_PATH_PAKAPP_SERVICE="/etc/systemd/system/pakapp.service"
+FILE_PATH_MEDICAL_KIOSK_PLYMOUTH="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.plymouth"
+FILE_PATH_MEDICAL_KIOSK_SCRIPT="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.script"
+
 # --- STAGE 2.4 ---
+printf "\n--- STAGE 2.4 ---\n"
 sudo apt update && sudo apt upgrade -y
 
 #sudo apt install libcamera-apps -y #Опционально
+
+# --- STAGE 2.6 ---
+printf "\n--- STAGE 2.6 ---\n"
 
 # Включение WLAN
 sudo nmcli radio wifi on
@@ -11,13 +28,13 @@ sudo nmcli radio wifi on
 sudo usermod -aG lp,tty,input,video,plugdev,i2c,dialout,netdev $USER
 
 
-FILE_PATH="/etc/udev/rules.d/99-hidraw.rules"
+# FILE_PATH="/etc/udev/rules.d/99-hidraw.rules"
 CONTENT='KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", GROUP="plugdev"'
-echo "$CONTENT" | sudo tee "$FILE_PATH" > /dev/null
+echo "$CONTENT" | sudo tee "$FILE_PATH_99_HIDRAW_RULES" > /dev/null
 
 
-FILE_PATH="/etc/udev/rules.d/99-medical.rules"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+# FILE_PATH="/etc/udev/rules.d/99-medical.rules"
+sudo tee "$FILE_PATH_99_MEDICAL_RULES" > /dev/null <<EOF
 # Правило для доступа через libusb
 SUBSYSTEM=="usb", ATTRS{idVendor}=="04d9", ATTRS{idProduct}=="b554", MODE="0666", GROUP="plugdev"
 
@@ -26,8 +43,8 @@ KERNEL=="hidraw*", ATTRS{idVendor}=="04d9", ATTRS{idProduct}=="b554", MODE="0666
 EOF
 
 
-FILE_PATH="/etc/udev/rules.d/99-medical-hid.rules"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+# FILE_PATH="/etc/udev/rules.d/99-medical-hid.rules"
+sudo tee "$FILE_PATH_99_MEDICAL_HID_RULES" > /dev/null <<EOF
 # Даем права группе plugdev на все hidraw устройства
 KERNEL=="hidraw*", SUBSYSTEM=="hidraw", MODE="0666", GROUP="plugdev"
 
@@ -51,8 +68,8 @@ sudo raspi-config nonint do_serial_cons 1
 echo -1 | sudo tee /sys/bus/usb/devices/usb*/power/autosuspend
 
 
-FILE_PATH="/etc/polkit-1/rules.d/10-network-manager.rules"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+# FILE_PATH="/etc/polkit-1/rules.d/10-network-manager.rules"
+sudo tee "$FILE_PATH_10_NETWORK_MANAGER_RULES" > /dev/null <<EOF
 polkit.addRule(function(action, subject) {
     if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 &&
         subject.isInGroup("netdev")) {
@@ -61,8 +78,8 @@ polkit.addRule(function(action, subject) {
 });
 EOF
 
-sudo cp -rf ~/config/ /opt/config
-sudo cp -f ~/pakapp /opt/pakapp
+sudo cp -rf $FILE_PATH_CONFIG_DIR /opt/config
+sudo cp -f $FILE_PATH_PAKAPP /opt/pakapp
 sudo chmod +x /opt/pakapp
 sudo chown root:root /opt/pakapp
 
@@ -70,6 +87,8 @@ sudo mkdir -p /opt/exam_video
 sudo chown $USER:$(id -gn) /opt/exam_video
 sudo chmod 755 /opt/exam_video
 
+# --- STAGE 3.3 ---
+printf "\n--- STAGE 3.3 ---\n"
 
 sudo apt-get install -y \
 libhidapi-libusb0 \
@@ -96,9 +115,11 @@ gstreamer1.0-plugins-bad \
 gstreamer1.0-plugins-ugly \
 gstreamer1.0-libav
 
+# --- STAGE 3.4 ---
+printf "\n--- STAGE 3.3 ---\n"
 
-FILE_PATH="/etc/systemd/system/pakapp.service"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+# FILE_PATH="/etc/systemd/system/pakapp.service"
+sudo tee "$FILE_PATH_PAKAPP_SERVICE" > /dev/null <<EOF
 [Unit]
 Description=My Qt PAK ADMK or UMKA Kiosk Project
 After=network.target multi-user.target
@@ -130,7 +151,7 @@ sudo systemctl start pakapp.service
 sudo mv /usr/bin/wf-panel-pi /usr/bin/wf-panel-pi.bak
 sudo pkill wf-panel-pi
 
-pcmanfm --set-wallpaper  ~/Documents/wallpaper.png --wallpaper-mode=stretch
+pcmanfm --set-wallpaper  $FILE_PATH_WALLPAPER --wallpaper-mode=stretch
 
 FILE_PATH="/boot/firmware/cmdline.txt"
 # заменить console=tty1 на console=tty3
@@ -146,6 +167,7 @@ fi
 
 
 # --- STAGE 4.3 ---
+printf "\n--- STAGE 4.3 ---\n"
 # --- INTERACTIVE! ---
 
 # Заменить
@@ -154,11 +176,14 @@ fi
 sudo rpi-eeprom-config --edit
 
 # --- NON INTERACTIVE ---
-sudo mkdir -p /usr/share/plymouth/themes/medical_kiosk
-sudo cp -f ~/Documents/wallpaper.png /usr/share/plymouth/themes/medical_kiosk/splash.png
+# --- STAGE 4.3(2) ---
+printf "\n--- STAGE 4.3(2) ---\n"
 
-FILE_PATH="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.plymouth"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+sudo mkdir -p /usr/share/plymouth/themes/medical_kiosk
+sudo cp -f $FILE_PATH_WALLPAPER /usr/share/plymouth/themes/medical_kiosk/splash.png
+
+# FILE_PATH="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.plymouth"
+sudo tee "$FILE_PATH_MEDICAL_KIOSK_PLYMOUTH" > /dev/null <<EOF
 [Plymouth Theme] 
 Name=Medical Kiosk Splash 
 Description=Custom brand logo for medical device 
@@ -168,8 +193,8 @@ ImageDir=/usr/share/plymouth/themes/medical_kiosk
 ScriptFile=/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.script
 EOF
 
-FILE_PATH="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.script"
-sudo tee "$FILE_PATH" > /dev/null <<EOF
+# FILE_PATH="/usr/share/plymouth/themes/medical_kiosk/medical_kiosk.script"
+sudo tee "$FILE_PATH_MEDICAL_KIOSK_SCRIPT" > /dev/null <<EOF
 # Получаем размеры окна (экрана) 
 screen_width = Window.GetWidth(); 
 screen_height = Window.GetHeight(); 
