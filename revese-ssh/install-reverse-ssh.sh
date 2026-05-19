@@ -19,12 +19,11 @@ ssh-keygen -t ed25519
 
 ssh-copy-id -p $VPS_SSH_PORT $VPS_USER@$VPS_IP
 
-# sudo apt install autossh
+sudo apt install autossh
 # check autossh work
 # autossh -M 0 -N -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -p $VPS_SSH_PORT -R $VPS_RPI_SSH_PORT:localhost:22 $VPS_USER@$VPS_IP
 
-sudo nano /etc/systemd/system/reverse_ssh.service
-
+# sudo nano /etc/systemd/system/reverse_ssh.service
 sudo tee "$FILE_PATH_REVERSE_SSH_SERVICE" > /dev/null <<EOF
 [Unit]
 Description=Reverse SSH Tunnel

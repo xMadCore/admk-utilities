@@ -80,3 +80,6 @@ fi
 # тест шлейфовой камеры
 # DISPLAY=:0 rpicam-hello -t 0
 DISPLAY=:0 rpicam-hello -t 0 --rotation 180
+
+# тест звука
+ffplay ~/Documents/audio.mp3
