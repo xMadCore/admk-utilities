@@ -8,6 +8,8 @@
 
     home/user/
     ├── admk-utilities/
+    │   ├── reverse-ssh/
+    │   ├── sys-admin-helpers/
     │   ├── config.txt
     │   ├── install-config.sh
     │   ├── pre-install-tests.sh
