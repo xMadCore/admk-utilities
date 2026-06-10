@@ -36,6 +36,9 @@
 
     ./pre-install-tests.sh
 
+    # Заменить
+    # BOOT_UART=0 
+    # DISABLE_HDMI_TERMINAL=1
     ./install-pakapp.sh
 
     ./post-install-tests.sh

@@ -1,4 +1,6 @@
 #!/bin/bash
+# idempotent script
+# скрипт идемпотентен
 FILE_PATH_99_HIDRAW_RULES="/etc/udev/rules.d/99-hidraw.rules"
 FILE_PATH_99_MEDICAL_RULES="/etc/udev/rules.d/99-medical.rules"
 FILE_PATH_99_MEDICAL_HID_RULES="/etc/udev/rules.d/99-medical-hid.rules"
