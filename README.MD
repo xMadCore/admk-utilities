@@ -45,3 +45,11 @@
 
     sudo reboot # sudo poweroff
 ```
+
+
+change hostname
+```
+    sudo nano /etc/cloud/cloud.cfg
+    # preserve_hostname: true
+    sudo hostnamectl set-hostname new-host-name
+```

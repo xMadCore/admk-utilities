@@ -32,7 +32,7 @@ After=network-online.target
 [Service]
 User=$USER
 
-ExecStart=/usr/bin/autossh -M 0 -N -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -p $VPS_SSH_PORT -R $VPS_RPI_SSH_PORT:localhost:22 $VPS_USER@$VPS_IP
+ExecStart=/usr/bin/autossh -M 0 -N -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -o "ExitOnForwardFailure yes" -p $VPS_SSH_PORT -R $VPS_RPI_SSH_PORT:localhost:22 $VPS_USER@$VPS_IP
 
 Restart=always
 RestartSec=20
